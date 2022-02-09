@@ -1,0 +1,60 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.1.0/github-markdown.css">
+</head>
+<body><article class="markdown-body">
+<h2 id="domains-statistics-system">Domains statistics system</h2>
+<h1 id="overview">Overview</h1>
+<p>This project is a domain statistcs system wrote for test
+It&#39;s a flask+swagger API application</p>
+<h1 id="install-dependency">Install dependency</h1>
+<pre><code>pip <span class="hljs-keyword">install</span> -r requirements.txt
+</code></pre><h2 id="dependency">Dependency</h2>
+<ol>
+<li>gevent</li>
+<li>cachetools </li>
+</ol>
+<h1 id="running-test">Running test</h1>
+<ol>
+<li><p>Run flask application </p>
+<pre><code>FLASK_APP=app.py flask <span class="hljs-keyword">run</span><span class="bash"></span>
+</code></pre><p>or  use ./start.sh</p>
+</li>
+<li><p>Post some test data</p>
+</li>
+</ol>
+<pre><code>./send_domains_stats.<span class="hljs-keyword">sh</span>
+</code></pre><p>You can run send stats script multiply times </p>
+<ol>
+<li><p>Wait for next statistics period </p>
+</li>
+<li><p>Use stats endpoint to get stats</p>
+<pre><code><span class="hljs-symbol">curl</span> -X <span class="hljs-meta">GET</span> <span class="hljs-string">"http://127.0.0.1:5000/domains/min"</span> -H <span class="hljs-string">"accept: application/json"</span>
+</code></pre></li>
+</ol>
+<h1 id="debugging-and-monitoring">Debugging and monitoring</h1>
+<p>Program writes log to stdout </p>
+<p>Example : 
+<pre><code>
+INFO:werkzeug:127.0.0.1 - - [09/Feb/2022 13:48:54] &quot;POST /domains HTTP/1.1&quot; 200 -
+DEBUG:root:[API]Process append request  {&#39;timestamp&#39;: 1644407344, &#39;example1.com&#39;: 80, &#39;example2.com&#39;: 5, &#39;example3&#39;: 12}
+DEBUG:root:[API]Add domain stats : example1.com =&gt; 80
+DEBUG:storage.memory:[STORAGE][1644407344]Save clicks for 1 -  80 
+DEBUG:storage.memory:[STORAGE][CLICK]Request cache size : 1
+DEBUG:root:[API]Add domain stats : example2.com =&gt; 5
+DEBUG:storage.memory:[STORAGE][1644407344]Save clicks for 2 -  5 
+DEBUG:storage.memory:[STORAGE][CLICK]Request cache size : 1
+DEBUG:root:[API]Add domain stats : example3 =&gt; 12
+DEBUG:storage.memory:[STORAGE][1644407344]Save clicks for 3 -  12 
+DEBUG:storage.memory:[STORAGE][CLICK]Request cache size : 1
+INFO:werkzeug:127.0.0.1 - - [09/Feb/2022 13:48:54] &quot;POST /domains HTTP/1.1&quot; 200 -
+DEBUG:root:[APP]Rebuild aggregation min
+DEBUG:storage.memory:[STORAGE] Get clicks for domain example1.com
+DEBUG:storage.memory:[STORAGE] Get clicks for domain example2.com
+DEBUG:storage.memory:[STORAGE] Get clicks for domain example3
+DEBUG:root:[APP][min]Top domains {&#39;domains&#39;: {&#39;example3&#39;: 144, &#39;example1.com&#39;: 110, &#39;example2.com&#39;: 95}}
+INFO:root:[API]Getting top domains list for min
+INFO:werkzeug:127.0.0.1 - - [09/Feb/2022 13:49:16] &quot;GET /domains/min HTTP/1.1&quot; 200 -</p>
+</code></pre>
+</article>
+</body>
